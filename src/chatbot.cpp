@@ -42,11 +42,64 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE
-////
+ChatBot::ChatBot(const ChatBot &source){ // 2: copy constructor
+    std::cout << "ChatBot Copy Constructor" << std::endl;
 
-////
-//// EOF STUDENT CODE
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    _image = new wxBitmap();
+    *_image = *source._image;
+}
+
+ChatBot &ChatBot::operator=(const ChatBot &source){ // 3: copy assignment
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+    if(this == &source){ // protect self-assignment
+        return *this;
+    }
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic  = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    if(_image != nullptr)delete _image;
+    _image = new wxBitmap();
+    *_image = *source._image;
+    return *this;
+} 
+
+ChatBot::ChatBot(ChatBot &&source){ // 4: move constructor
+    std::cout << "ChatBot Move Constructor" <<std::endl;
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    source._rootNode = nullptr;
+    source._currentNode = nullptr;
+    source._chatLogic = nullptr;
+    _image = new wxBitmap();
+    *_image = *source._image;
+    source._image = nullptr;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &&source){ // 5: move assignment operator
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+    if(this == &source){
+        return *this;
+    }
+    _rootNode = source._rootNode;
+    _currentNode = source._currentNode;
+    _chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
+    source._rootNode = nullptr;
+    source._currentNode = nullptr;
+    source._chatLogic = nullptr;
+    if(_image!=nullptr) delete _image;
+    _image = new wxBitmap();
+    *_image = *source._image;
+    source._image = nullptr;
+    return *this;
+}
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
 {
